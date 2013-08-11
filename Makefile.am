@@ -65,6 +65,7 @@ include example/sieve/Makefile.am
 include example/tetgen/Makefile.am
 include example/timings/Makefile.am
 include example/balance_seeds/Makefile.am
+include particleChase/Makefile.am
 
 if P4EST_BLAS
 if P4EST_LAPACK
