@@ -20,8 +20,8 @@ fi
 echo "--- This is the bootstrap script for p4est ---"
 echo "Current directory is $PWD"
 
-aclocal -Wall -I config -I "$SC_CONFIG"
+aclocal -I config -I "$SC_CONFIG"
 autoconf -Wall --force
 autoheader -Wall --force
-libtoolize --automake --force --copy
+glibtoolize --automake --force --copy
 automake -Wall --add-missing --copy
