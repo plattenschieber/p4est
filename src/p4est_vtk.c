@@ -40,6 +40,7 @@
 #endif /* !P4_TO_P8 */
 
 #include <sc_io.h>
+#include "../particleChase/pchase_vtk.h"
 
 static const double p4est_vtk_scale = 0.95;
 static const int    p4est_vtk_write_tree = 1;
@@ -541,17 +542,33 @@ p4est_vtk_write_header (p4est_t * p4est, p4est_geometry_t * geom,
     fprintf (vtufile, "        <DataArray type=\"%s\" Name=\"treeid\""
              " format=\"%s\">\n", P4EST_VTK_LOCIDX, P4EST_VTK_FORMAT_STRING);
 #ifdef P4EST_VTK_ASCII
+    /* fprintf (vtufile, "         "); */
+    /* for (il = 0, sk = 1, jt = first_local_tree; jt <= last_local_tree; ++jt) { */
+    /*   tree = p4est_tree_array_index (trees, jt); */
+    /*   num_quads = tree->quadrants.elem_count; */
+    /*   for (zz = 0; zz < num_quads; ++zz, ++sk, ++il) { */
+    /*     fprintf (vtufile, " %lld", (long long) jt); */
+    /*     if (!(sk % 20) && il != (Ncells - 1)) */
+    /*       fprintf (vtufile, "\n         "); */
+    /*   } */
+    /* } */
+    /* fprintf (vtufile, "\n"); */
+    
+
     fprintf (vtufile, "         ");
     for (il = 0, sk = 1, jt = first_local_tree; jt <= last_local_tree; ++jt) {
       tree = p4est_tree_array_index (trees, jt);
       num_quads = tree->quadrants.elem_count;
       for (zz = 0; zz < num_quads; ++zz, ++sk, ++il) {
-        fprintf (vtufile, " %lld", (long long) jt);
+        p4est_quadrant_t * quad = (p4est_quadrant_t *)p4est_quadrant_array_index(&tree->quadrants, zz);
+        pchase_quadrant_datavtk_t *quadData = (pchase_quadrant_datavtk_t *)quad->p.user_data;
+        fprintf (vtufile, " %lld", (long long) quadData->nParticles);
         if (!(sk % 20) && il != (Ncells - 1))
           fprintf (vtufile, "\n         ");
       }
     }
     fprintf (vtufile, "\n");
+
 #else
     for (il = 0, jt = first_local_tree; jt <= last_local_tree; ++jt) {
       tree = p4est_tree_array_index (trees, jt);
